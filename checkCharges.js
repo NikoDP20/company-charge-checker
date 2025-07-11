@@ -1,3 +1,4 @@
+require("dotenv").config();
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
@@ -5,7 +6,8 @@ const { parse } = require("csv-parse/sync");
 const xlsx = require("xlsx");
 const fileDialog = require("node-file-dialog");
 
-const API_KEY = "";
+const API_KEY = process.env.API_KEY;
+
 const LENDER_NAMES = [
   "Nationwide Finance Limited",
   "Sellersfunding International Portfolio LTD",
@@ -169,7 +171,7 @@ async function main() {
   for (const number of companyNumbers) {
     console.log(`Checking company: ${number}`);
     //const charges = await getChargesWithLender(number, LENDER_NAMES);                 // Fetch charges with any lender in the list
-    const charges = await getAllCharges(number);                                        // Fetch all charges without lender filter
+    const charges = await getAllCharges(number); // Fetch all charges without lender filter
     if (charges.length > 0) {
       const profile = await getCompanyProfile(number);
       const officers = await getCompanyOfficers(number);
@@ -207,7 +209,19 @@ async function main() {
     const ws = xlsx.utils.json_to_sheet(outputRows);
     xlsx.utils.book_append_sheet(wb, ws, "Matched Charges");
     const downloadsDir = path.join(require("os").homedir(), "Downloads");
-    const outPath = path.join(downloadsDir, "matched_charges.xlsx");
+
+    // Format: HH:MM:SS-DD/MM/YY
+    const now = new Date();
+    const pad = (n) => n.toString().padStart(2, "0");
+    const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}_${pad(
+      now.getDate()
+    )}/${pad(now.getMonth() + 1)}/${now.getFullYear().toString().slice(-2)}`;
+    const safeTimeStr = timeStr.replace(/[:/]/g, "-");
+
+    const outPath = path.join(
+      downloadsDir,
+      `matched_charges_${safeTimeStr}.xlsx`
+    );
     xlsx.writeFile(wb, outPath);
     console.log(`\n✅ Excel file created: ${outPath}`);
   } else {
