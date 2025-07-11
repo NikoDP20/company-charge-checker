@@ -5,7 +5,7 @@ const { parse } = require("csv-parse/sync");
 const xlsx = require("xlsx");
 const fileDialog = require("node-file-dialog");
 
-const API_KEY = "c501755c-827b-4a64-a0c0-7df0dd8a2ec6";
+const API_KEY = "";
 const LENDER_NAMES = [
   "Nationwide Finance Limited",
   "Sellersfunding International Portfolio LTD",
