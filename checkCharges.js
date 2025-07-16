@@ -11,15 +11,7 @@ const API_KEY = process.env.API_KEY;
 const LENDER_NAMES = [
   "Nationwide Finance Limited",
   "Sellersfunding International Portfolio LTD",
-  "Capitalrise Finance Limited",
-  "Peak Cashflow Limited",
-  "Sevcap I Limited",
-  "Seneca Trade Partners LTD",
-  "Finbiz Funding Limited",
-  "Swishfund LTD",
-  "Optimum Sme Finance Limited",
-  "Liquid Link Limited",
-  "Reward Capital Limited",
+  "Barclays Bank PLC",
 ];
 
 const BASE_URL = "https://api.company-information.service.gov.uk";
@@ -170,8 +162,10 @@ async function main() {
 
   for (const number of companyNumbers) {
     console.log(`Checking company: ${number}`);
-    //const charges = await getChargesWithLender(number, LENDER_NAMES);                 // Fetch charges with any lender in the list
-    const charges = await getAllCharges(number); // Fetch all charges without lender filter
+
+    // ------------------ CHANGE WHAT YOU ARE SEARCHING FOR HERE ------------------
+    const charges = await getChargesWithLender(number, LENDER_NAMES); // Fetch charges with any lender in the list
+    //const charges = await getAllCharges(number); // Fetch all charges without lender filter
     if (charges.length > 0) {
       const profile = await getCompanyProfile(number);
       const officers = await getCompanyOfficers(number);
@@ -230,3 +224,5 @@ async function main() {
 }
 
 main();
+
+// to run the application type `node checkCharges.js` in the terminal
